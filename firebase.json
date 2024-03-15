@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "site": "pomidaro",
+    "public": "public"
+  },
+  "firestore": {
+    "rules": "y",
+    "indexes": "firestore.indexes.json"
+  }
+}
