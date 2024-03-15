@@ -1,11 +1,12 @@
 {
   "name": "pomidaro",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "start": "npm run build:env && ng serve",
+    "build": "npm run build:env && ng build",
+    "build:env": "sh ci/build-env.sh",
+    "watch": "npm run build:env && ng build --watch --configuration development",
     "test": "ng test"
   },
   "private": true,
