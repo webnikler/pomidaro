@@ -1,7 +1,13 @@
 {
   "hosting": {
     "site": "pomidaro",
-    "public": "public/browser"
+    "public": "public/browser",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   },
   "firestore": {
     "rules": "y",
