@@ -1,13 +1,18 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { CustomIconsService } from './common/services/custom-icons.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  template: '<router-outlet />',
+  providers: [
+    CustomIconsService,
+  ],
 })
 export class AppComponent {
-  title = 'pomidaro';
+  constructor(private customIcons: CustomIconsService) {
+    this.customIcons.init();
+  }
 }
