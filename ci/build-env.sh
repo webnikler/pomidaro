@@ -18,6 +18,7 @@ echo "export const environment = {
   }
 };" > environment.ts
 
+echo "apiKey: $POMIDARO_FIREBASE_API_KEY"
 echo 'Finished setting up environment'
 
 exit 0
