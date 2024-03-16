@@ -11,6 +11,13 @@ jobs:
         with:
           node-version: 18
       - run: npm ci && npm run build
+        env:
+          POMIDARO_FIREBASE_API_KEY: ${{ secrets.POMIDARO_FIREBASE_API_KEY }}
+          POMIDARO_FIREBASE_AUTH_DOMAIN: ${{ secrets.POMIDARO_FIREBASE_AUTH_DOMAIN }}
+          POMIDARO_FIREBASE_PROJECT_ID: ${{ secrets.POMIDARO_FIREBASE_PROJECT_ID }}
+          POMIDARO_FIREBASE_STORAGE_BUCKET: ${{ secrets.POMIDARO_FIREBASE_STORAGE_BUCKET }}
+          POMIDARO_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.POMIDARO_FIREBASE_MESSAGING_SENDER_ID }}
+          POMIDARO_FIREBASE_APP_ID: ${{ secrets.POMIDARO_FIREBASE_APP_ID }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
