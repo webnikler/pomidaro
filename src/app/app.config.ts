@@ -9,8 +9,6 @@ import { APP_ROUTES } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { environment } from '../environments/environment';
 
-console.log('config', environment.firebaseConfig);
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(APP_ROUTES),
