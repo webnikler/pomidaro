@@ -1,7 +1,5 @@
 #!/bin/sh
 
-[ ! -f .env ] || export $(grep -v '^#' .env | xargs)
-
 cd src
 mkdir -p environments
 cd environments
