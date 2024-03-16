@@ -1,16 +1,20 @@
-import { Route, Routes } from '@angular/router';
-import { AuthComponent } from './views/auth/auth.component';
-import { AppRoutePath } from './routes/paths';
+import { Routes } from '@angular/router';
+import { canActivate, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
 
-const root: Route = {
-  path: AppRoutePath.root,
-  redirectTo: AppRoutePath.auth,
-  pathMatch: 'full',
-}
-
-const auth: Route = {
-  path: AppRoutePath.auth,
-  component: AuthComponent,
-};
-
-export const routes: Routes = [root, auth];
+export const APP_ROUTES: Routes = [
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'home',
+  },
+  {
+    path: 'auth',
+    loadComponent: () => import('./views/auth/auth.component').then(m => m.AppAuthViewComponent),
+    ...canActivate(() => redirectLoggedInTo([''])),
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./views/home/home.routes').then(m => m.APP_HOME_ROUTES),
+    ...canActivate(() => redirectUnauthorizedTo(['auth'])),
+  }
+];

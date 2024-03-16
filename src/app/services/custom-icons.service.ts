@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -15,12 +15,10 @@ class CustomIcon {
 export class CustomIconsService {
   private icons = [new CustomIcon('google')];
 
-  constructor(
-    private matIconRegistry: MatIconRegistry,
-    private domSanitzer: DomSanitizer,
-  ) { }
+  private readonly matIconRegistry = inject(MatIconRegistry);
+  private readonly domSanitzer = inject(DomSanitizer);
 
-  public init() {
+  init() {
     for (const icon of this.icons) {
       this.registerIcon(icon);
     }

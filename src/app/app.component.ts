@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CustomIconsService } from './common/services/custom-icons.service';
+
+import { CustomIconsService } from './services/custom-icons.service';
 
 @Component({
   selector: 'app-root',
