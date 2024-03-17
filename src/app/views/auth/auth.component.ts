@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthStore } from '@stores';
+import { AuthStore } from '@data/auth';
 
 @Component({
   selector: 'app-auth-view',

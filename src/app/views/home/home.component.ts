@@ -1,23 +1,22 @@
 import { NgIf } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { UsersApiService } from '@services';
-import { AuthStore } from '@stores';
-import { AppUserStore } from 'app/stores/user.store';
+import { AuthStore } from '@data/auth';
+import { UserApiService, UserStore } from '@data/user';
 
 @Component({
   selector: 'app-home-view',
   standalone: true,
   template: '<router-outlet *ngIf="!isLoading" />',
   providers: [
-    UsersApiService,
-    AppUserStore,
+    UserApiService,
+    UserStore,
   ],
   imports: [RouterOutlet, NgIf],
 })
 export class AppHomeViewComponent {
   private readonly auth = inject(AuthStore);
-  private readonly user = inject(AppUserStore);
+  private readonly user = inject(UserStore);
   private readonly router = inject(Router);
 
   get isLoading() {

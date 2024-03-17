@@ -1,8 +1,8 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { SessionsApiService } from '@services';
-import { AuthStore, SessionCollectionStore } from '@stores';
-import { AppUserStore } from 'app/stores/user.store';
+import { AuthStore } from '@data/auth';
+import { SessionApiService, SessionCollectionStore } from '@data/session';
+import { UserStore } from '@data/user';
 
 @Component({
   selector: 'app-sessions-view',
@@ -13,12 +13,12 @@ import { AppUserStore } from 'app/stores/user.store';
     JsonPipe,
   ],
   providers: [
-    SessionsApiService,
+    SessionApiService,
     SessionCollectionStore,
   ],
 })
 export class AppSessionsViewComponent {
-  public readonly user = inject(AppUserStore);
+  public readonly user = inject(UserStore);
   public readonly auth = inject(AuthStore);
   public readonly sessions = inject(SessionCollectionStore);
 

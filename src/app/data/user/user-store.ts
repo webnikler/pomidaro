@@ -1,22 +1,22 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { State, createState, stateError, stateLoading, stateSuccess } from './common/state';
+import { State, createState, stateError, stateLoading, stateSuccess } from '../common/state';
 import { inject } from '@angular/core';
-import { AppUser, UsersApiService } from '@services';
+import { User } from './user.types';
+import { UserApiService } from './user-api.service';
 
-
-const EMPTY_APP_USER: AppUser = {
+const EMPTY_APP_USER: User = {
   id: '',
   authId: '',
   name: '',
   avatarURL: '',
 };
 
-const DEFAULT_STATE: State<AppUser> = createState(EMPTY_APP_USER);
+const DEFAULT_STATE: State<User> = createState(EMPTY_APP_USER);
 
-export const AppUserStore = signalStore(
-  withState<State<AppUser>>(DEFAULT_STATE),
+export const UserStore = signalStore(
+  withState<State<User>>(DEFAULT_STATE),
 
-  withMethods((store, userApi = inject(UsersApiService)) => ({
+  withMethods((store, userApi = inject(UserApiService)) => ({
     async requestUser() {
       patchState(store, stateLoading());
 

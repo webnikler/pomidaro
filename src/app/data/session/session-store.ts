@@ -1,13 +1,10 @@
 import { signalStore, withState } from '@ngrx/signals';
-import { State, createState } from './common/state';
-
-export type Session = {
-  owner_uid: string;
-  name: string;
-};
+import { State, createState } from '../common/state';
+import { Session } from './sesion.types';
 
 const EMPTY_SESSION = {
-  owner_uid: '',
+  id: '',
+  ownerId: '',
   name: '',
 };
 

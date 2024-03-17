@@ -1,19 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, getDocs, query, where } from '@angular/fire/firestore';
-
-export type AppSession = {
-  id: string;
-  ownerId: string;
-  name: string;
-};
-
-export type ShortAppSession = Pick<AppSession, 'name' | 'ownerId' | 'id'>;
+import { ShortSession } from './sesion.types';
 
 @Injectable()
-export class SessionsApiService {
+export class SessionApiService {
   private readonly firestore = inject(Firestore);
 
-  async getUserSessions(userId?: string): Promise<ShortAppSession[]> {
+  async getUserSessions(userId?: string): Promise<ShortSession[]> {
     if (!userId) {
       throw Error('user id is required');
     }
@@ -22,6 +15,6 @@ export class SessionsApiService {
     const collectionQuery = query(collectionRef, where('ownerId', '==', userId));
     const snapshot = await getDocs(collectionQuery);
 
-    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as ShortAppSession[];
+    return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as ShortSession[];
   }
 }

@@ -36,6 +36,9 @@
       ],
       "@helpers": [
         "app/shared/helpers"
+      ],
+      "@data/*": [
+        "app/data/*"
       ]
     }
   },
