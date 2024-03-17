@@ -1,6 +1,6 @@
 import { Component, effect, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { AuthStore } from '../../stores/auth.store';
+import { AuthStore } from '@stores';
 
 @Component({
   selector: 'app-home-view',
@@ -14,7 +14,7 @@ export class AppHomeViewComponent {
 
   constructor() {
     effect(() => {
-      if (!this.auth.user()) {
+      if (!this.auth.isAuth()) {
         this.router.navigate(['auth']);
       }
     });

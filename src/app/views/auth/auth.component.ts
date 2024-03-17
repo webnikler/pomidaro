@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthStore } from '../../stores/auth.store';
+import { AuthStore } from '@stores';
 
 @Component({
   selector: 'app-auth-view',
@@ -22,7 +22,7 @@ export class AppAuthViewComponent {
 
   constructor() {
     effect(() => {
-      if (this.auth.user()) {
+      if (this.auth.isAuth()) {
         this.router.navigate(['']);
       }
     });

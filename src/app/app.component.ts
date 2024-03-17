@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
-import { CustomIconsService } from './services/custom-icons.service';
+import { CustomIconsService } from '@services';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +12,9 @@ import { CustomIconsService } from './services/custom-icons.service';
   ],
 })
 export class AppComponent {
-  constructor(private customIcons: CustomIconsService) {
+  private readonly customIcons = inject(CustomIconsService);
+
+  constructor() {
     this.customIcons.init();
   }
 }

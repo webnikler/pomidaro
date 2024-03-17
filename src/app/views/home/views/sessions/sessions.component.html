@@ -1,3 +1,4 @@
-sessions
+{{ sessionCollection.data() | json }}
+{{ sessionCollection.loading() }}
 
-<button (click)="authStore.signOut()">Выйти</button>
+<button (click)="auth.signOut()">Выйти</button>
