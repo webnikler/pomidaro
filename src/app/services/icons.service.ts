@@ -2,18 +2,18 @@ import { Injectable, inject } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
-class CustomIcon {
-  private static readonly folder = 'assets/custom-icons';
+class Icon {
+  private static readonly folder = 'assets/icons';
   public readonly path: string;
 
   constructor(public name: string) {
-    this.path = `${CustomIcon.folder}/${name}.svg`;
+    this.path = `${Icon.folder}/${name}.svg`;
   }
 }
 
 @Injectable()
-export class CustomIconsService {
-  private icons = [new CustomIcon('google')];
+export class IconsService {
+  private icons = [new Icon('google')];
 
   private readonly matIconRegistry = inject(MatIconRegistry);
   private readonly domSanitzer = inject(DomSanitizer);
@@ -24,7 +24,7 @@ export class CustomIconsService {
     }
   }
 
-  private registerIcon({ name, path }: CustomIcon) {
+  private registerIcon({ name, path }: Icon) {
     this.matIconRegistry.addSvgIcon(name, this.domSanitzer.bypassSecurityTrustResourceUrl(path));
   }
 }

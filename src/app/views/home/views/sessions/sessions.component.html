@@ -1,4 +1,5 @@
-{{ sessionCollection.data() | json }}
-{{ sessionCollection.loading() }}
+{{ sessions.data() | json }}
+{{ sessions.loading() }}
+{{ sessions.errorMessage() }}
 
 <button (click)="auth.signOut()">Выйти</button>
