@@ -3,14 +3,14 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable()
-export class IconsRegistryService {
+export class IconsProvider {
   private readonly iconsFolder = 'assets/icons';
-  private readonly icons = ['google'];
+  private readonly icons = ['google', 'logo'];
 
   private readonly matIconRegistry = inject(MatIconRegistry);
   private readonly domSanitzer = inject(DomSanitizer);
 
-  init() {
+  constructor() {
     this.icons.forEach(i => this.register(i));
   }
 

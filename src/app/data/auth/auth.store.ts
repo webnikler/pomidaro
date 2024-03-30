@@ -1,10 +1,10 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
-import { State, createState, stateError, stateLoading, stateSuccess } from '../common/state';
+import { State, createState, stateError, stateLoading, stateSuccess } from '../common/helpers';
 import { EMPTY_AUTH_USER } from './auth.const';
-import { AuthUser } from './auth.types';
-import { AuthApiService } from './auth-api.service';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
+import { AuthUser } from '@data/common/auth/auth.types';
+import { AuthProvider } from '@data/common/auth/auth.provider';
 
 const DEFAULT_STATE: State<AuthUser> = createState(EMPTY_AUTH_USER);
 
@@ -18,17 +18,17 @@ export const AuthStore = signalStore(
     isAuth: computed(() => Boolean(data().uid)),
   })),
 
-  withMethods((store, authApi = inject(AuthApiService)) => ({
+  withMethods((store, authProvider = inject(AuthProvider)) => ({
     async signIn() {
       try {
-        await authApi.signIn();
+        await authProvider.signIn();
       } catch (error) {
         patchState(store, stateError(error));
       }
     },
     async signOut() {
       try {
-        await authApi.signOut();
+        await authProvider.signOut();
       } catch (error) {
         patchState(store, stateError(error));
       }
@@ -37,13 +37,13 @@ export const AuthStore = signalStore(
 
   withHooks(store => {
     const destroy$ = new Subject<void>();
-    const authApi = inject(AuthApiService);
+    const authProvider = inject(AuthProvider);
 
     return {
       onInit() {
         patchState(store, stateLoading());
 
-        authApi.authChanges$
+        authProvider.authChanges$
           .pipe(distinctUntilChanged(), takeUntil(destroy$))
           .subscribe({
             next: user => patchState(store, stateSuccess(user ?? EMPTY_AUTH_USER)),

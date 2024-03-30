@@ -3,10 +3,14 @@ import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { ReplaySubject } from 'rxjs';
 import { AuthUser } from './auth.types';
 
-@Injectable({ providedIn: 'root' })
-export class AuthApiService {
+@Injectable()
+export class AuthProvider {
   private readonly auth = inject(Auth);
   private readonly authChanges = new ReplaySubject<AuthUser | null>(1);
+
+  get authId() {
+    return this.auth.currentUser?.uid;
+  }
 
   get authChanges$() {
     return this.authChanges.asObservable();

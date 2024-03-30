@@ -7,6 +7,9 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { APP_ROUTES } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { environment } from '@environment';
+import { ApiProvider } from '@data/common/api/api.provider';
+import { AuthProvider } from '@data/common/auth/auth.provider';
+import { IconsProvider } from '@data/common/icons/icons.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,5 +21,8 @@ export const appConfig: ApplicationConfig = {
       provideFirestore(() => getFirestore()),
       provideAuth(() => getAuth()),
     ]),
+    ApiProvider,
+    AuthProvider,
+    IconsProvider,
   ],
 };

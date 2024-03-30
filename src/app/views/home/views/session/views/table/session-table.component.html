@@ -1,0 +1,18 @@
+<table mat-table [dataSource]="table.dataSource()">
+  <ng-container matColumnDef="rowName">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.rowName }}
+    </td>
+  </ng-container>
+
+  @for (column of table.columns(); track column.id; let idx = $index) {
+  <ng-container [matColumnDef]="idx.toString()">
+    <th mat-header-cell *matHeaderCellDef> {{ column.weekDayString }} </th>
+    <td mat-cell *matCellDef="let element"> {{ element[idx].value }} </td>
+  </ng-container>
+  }
+
+  <tr mat-header-row *matHeaderRowDef="table.displayedColumns()"></tr>
+  <tr mat-row *matRowDef="let row; columns: table.displayedColumns();"></tr>
+</table>

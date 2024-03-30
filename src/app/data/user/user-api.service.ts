@@ -1,25 +1,23 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { Firestore, collection, getDocs, query, where } from '@angular/fire/firestore';
 import { User } from './user.types';
+import { ApiProvider } from '@data/common/api/api.provider';
+import { AuthProvider } from '@data/common/auth/auth.provider';
 
 @Injectable()
 export class UserApiService {
-  private readonly firestore = inject(Firestore);
-  private readonly auth = inject(Auth);
+  private readonly api = inject(ApiProvider);
+  private readonly auth = inject(AuthProvider);
+
+  private get authId() {
+    return this.auth.authId;
+  }
 
   async getUser(): Promise<User> {
-    const authId = this.auth.currentUser?.uid;
-    const collectionRef = collection(this.firestore, 'users');
-    const collectionQuery = query(collectionRef, where('authId', '==', authId));
-    const snapshot = await getDocs(collectionQuery);
-    const users = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as User[];
+    if (!this.authId) throw new Error('Вы не авторизованы!');
+    const [user] = await this.api.getCollection<User>('users/', { authId: this.authId });
+    if (!user) throw new Error('Пользователь не найден!');
 
-    if (!users[0]) {
-      throw new Error('User is not found');
-    }
-
-    return users[0];
+    return user;
   }
 
   async updateUser() {

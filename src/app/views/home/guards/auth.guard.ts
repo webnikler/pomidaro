@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserStore } from '@data/user';
 
-export const homePermissionGuard = async (route: ActivatedRoute, router: Router) => {
+export const authGuard = async (route: ActivatedRoute, router: Router) => {
   const user = inject(UserStore);
 
   await user.requestUser();
@@ -13,4 +13,4 @@ export const homePermissionGuard = async (route: ActivatedRoute, router: Router)
     router.navigate(['auth']);
     return false;
   }
-}
+};

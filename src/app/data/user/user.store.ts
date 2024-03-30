@@ -1,5 +1,5 @@
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { State, createState, stateError, stateLoading, stateSuccess } from '../common/state';
+import { State, createState, stateError, stateLoading, stateSuccess } from '../common/helpers';
 import { computed, inject } from '@angular/core';
 import { User } from './user.types';
 import { UserApiService } from './user-api.service';

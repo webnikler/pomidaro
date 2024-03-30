@@ -1,4 +1,4 @@
-import { AuthUser } from './auth.types';
+import { AuthUser } from '@data/common/auth/auth.types';
 
 export const EMPTY_AUTH_USER: AuthUser = {
   displayName: null,

@@ -1,0 +1,25 @@
+<mat-toolbar>
+  <mat-toolbar-row fxLayoutAlign="space-between center">
+    <section fxLayoutAlign="center center" fxLayoutGap="10px">
+      <button mat-mini-fab color="warn">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Pomidaro</span>
+    </section>
+    <button mat-mini-fab color="warn" [routerLink]="['user']">
+      <mat-icon>person</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<nav mat-tab-nav-bar [tabPanel]="tabPanel" backgroundColor="warn" mat-stretch-tabs="false">
+  <a mat-tab-link><mat-icon>add</mat-icon></a>
+
+  @for (session of sessions; track session) {
+  <a mat-tab-link [active]="currentSessionId === session.id" (click)="selectSession(session.id)">
+    <mat-icon color="accent" *ngIf="currentSessionId === session.id">star</mat-icon> {{ session.name }}
+  </a>
+  }
+</nav>
+
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
