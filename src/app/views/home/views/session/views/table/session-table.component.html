@@ -1,14 +1,14 @@
 <table mat-table [dataSource]="table.dataSource()">
-  <ng-container matColumnDef="rowName">
+  <ng-container [matColumnDef]="table.ROW_NAME_KEY()">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-      {{ element.rowName }}
+      {{ element[table.ROW_NAME_KEY()] }}
     </td>
   </ng-container>
 
   @for (column of table.columns(); track column.id; let idx = $index) {
   <ng-container [matColumnDef]="idx.toString()">
-    <th mat-header-cell *matHeaderCellDef> {{ column.weekDayString }} </th>
+    <th mat-header-cell *matHeaderCellDef> {{ column.weekdayShort }} </th>
     <td mat-cell *matCellDef="let element"> {{ element[idx].value }} </td>
   </ng-container>
   }

@@ -14,20 +14,20 @@ export type OriginalSessionExtensions = {
   cells: OriginalSessionCell[];
 }
 
-export type SessionColType = 'pomidaro' | 'weekend' | 'default';
-export type SessionRowTrackingType = 'pomidaro' | 'time' | 'mark' | 'count';
+export type OriginalSessionColType = 'pomidaro' | 'weekend' | 'default';
+export type OriginalSessionRowTrackingType = 'pomidaro' | 'time' | 'mark' | 'count' | 'unknown';
 
 export type OriginalSessionCol = {
   id: Id;
   date: Timestamp;
-  type: SessionColType;
+  type: OriginalSessionColType;
 }
 
 export type OriginalSessionRow = {
   id: Id;
   name: string;
   minValue: number;
-  trackingType: SessionRowTrackingType;
+  trackingType: OriginalSessionRowTrackingType;
   editable: boolean;
 }
 
@@ -37,20 +37,3 @@ export type OriginalSessionCell = {
   colId: Id;
   value: number;
 }
-
-export type SessionCol = Omit<OriginalSessionCol, 'date'> & { date: Date };
-
-export type SessionRow = OriginalSessionRow;
-
-export type SessionCell = OriginalSessionCell;
-
-export type SessionTableCell = SessionCell & {
-  progress: number
-};
-
-export type SessionTableColumn = SessionCol & {
-  weekDayString: string;
-  dateString: string;
-}
-
-export type SessionTableDataSource = Record<string, SessionTableCell[]>[];

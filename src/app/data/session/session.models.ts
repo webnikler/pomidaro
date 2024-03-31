@@ -1,5 +1,13 @@
-import { convertTimestampToDate } from '@data/common/helpers';
-import { OriginalSession, OriginalSessionExtensions, SessionCell, SessionCol, SessionRow, SessionTableColumn, SessionTableDataSource } from './session.types';
+import { Id } from '@data/common/types';
+import {
+  OriginalSession,
+  OriginalSessionCell,
+  OriginalSessionCol,
+  OriginalSessionExtensions,
+  OriginalSessionRow,
+  OriginalSessionColType,
+  OriginalSessionRowTrackingType,
+} from './session.types';
 
 export const EMPTY_SESSION: ExtendedSession = {
   id: '',
@@ -8,10 +16,9 @@ export const EMPTY_SESSION: ExtendedSession = {
   created: new Date(),
   cols: [],
   rows: [],
-  cells: [],
 };
 
-const EMPTY_SESSION_CELL = {
+const EMPTY_SESSION_CELL: OriginalSessionCell = {
   id: '',
   colId: '',
   rowId: '',
@@ -24,87 +31,101 @@ export class Session implements Omit<OriginalSession, 'created'> {
   name = '';
   created = new Date();
 
-  constructor(originalSession: OriginalSession) {
-    Object.assign(this, originalSession);
-
-    this.created = convertTimestampToDate(originalSession.created);
+  constructor(session: OriginalSession) {
+    Object.assign(this, session, { created: session.created.toDate() });
   }
 };
 
 export class ExtendedSession extends Session {
   cols: SessionCol[] = [];
   rows: SessionRow[] = [];
-  cells: SessionCell[] = [];
 
-  constructor(originalSession: OriginalSession, extensions: OriginalSessionExtensions) {
+  constructor(originalSession: OriginalSession, { rows, cols, cells }: OriginalSessionExtensions) {
     super(originalSession);
 
-    this.cols = extensions.cols.map(c => ({ ...c, date: convertTimestampToDate(c.date) }));
-    this.rows = extensions.rows;
-    this.cells = extensions.cells;
+    this.cols = cols.map(col => new SessionCol(col)).sort((a, b) => +a.date - +b.date);
+    this.rows = rows.map(row => new SessionRow(row, cells, this.cols));
   }
 }
 
-export const SESSION_TABLE_ROW_NAME_KEY = 'rowName';
+export class SessionCol implements Omit<OriginalSessionCol, 'date'> {
+  type: OriginalSessionColType = 'default';
+  date = new Date();
+  id: Id = '';
+  displayedDate = '';
+  weekday = '';
+  weekdayShort = '';
+
+  constructor(col: OriginalSessionCol) {
+    Object.assign(this, col, { date: col.date.toDate() });
+    Object.assign(this, {
+      displayedDate: this.date.toLocaleDateString('ru-RU'),
+      weekday: this.date.toLocaleDateString('ru-RU', { weekday: 'long' }),
+      weekdayShort: this.date.toLocaleDateString('ru-RU', { weekday: 'short' }),
+    });
+  }
+}
+
+export class SessionRow implements OriginalSessionRow {
+  trackingType: OriginalSessionRowTrackingType = 'unknown';
+  editable: boolean = false;
+  minValue = 0;
+  id: Id = '';
+  name = '';
+  cells: SessionCell[] = [];
+
+  constructor(row: OriginalSessionRow, cells: OriginalSessionCell[], sortedCols: SessionCol[]) {
+    Object.assign(this, row);
+    Object.assign(this, { cells: this.buildCells(cells, sortedCols) });
+  }
+
+  private buildCells(cells: OriginalSessionCell[], sortedCols: SessionCol[]) {
+    return sortedCols.map(col => {
+      const cell = cells.find(({ rowId, colId }) => rowId === this.id && colId === col.id);
+      return new SessionCell(cell ?? EMPTY_SESSION_CELL, this);
+    });
+  }
+}
+
+export class SessionCell implements OriginalSessionCell {
+  id: Id = '';
+  rowId: Id = '';
+  colId: Id = '';
+  value = 0;
+  progress = 0;
+
+  constructor(cell: OriginalSessionCell, row: SessionRow) {
+    Object.assign(this, cell);
+    Object.assign(this, { process: this.calculateProgress(row) });
+  }
+
+  private calculateProgress(row: OriginalSessionRow): number {
+    return row.minValue ? Math.round((this.value / row.minValue) * 100) : 0;
+  }
+}
 
 export class SessionTable {
-  columns: SessionTableColumn[] = [];
-  dataSource: SessionTableDataSource = [];
+  columns: SessionCol[] = [];
+  dataSource: Record<string, SessionCell>[] = [];
   displayedColumns: string[] = [];
 
-  constructor(session: ExtendedSession) {
-    this.columns = this.buildColumns(session.cols);
-    this.displayedColumns = this.buildDisplayedColumns(session.cols);
-    this.dataSource = this.buildDataSource(session);
-  }
+  ROW_NAME_KEY = 'rowName';
 
-  private buildDisplayedColumns(sessionCols: SessionCol[]): string[] {
-    return [
-      SESSION_TABLE_ROW_NAME_KEY,
-      ...sessionCols.map((cell, i) => i.toString()),
-    ];
-  }
-
-  private buildColumns(sessionCols: SessionCol[]): SessionTableColumn[] {
-    return sessionCols
-      .sort((a, b) => +a.date - +b.date)
-      .map(cell => ({
-        ...cell,
-        weekDayString: this.getWeekDayString(cell.date),
-        dateString: this.getDateString(cell.date),
-      }));
-  }
-
-  private buildDataSource({ rows, cols, cells }: ExtendedSession): SessionTableDataSource {
-    return rows.map(row => {
-      return cols.reduce((acc, col, index) => {
-        const cell = this.findCell(cells, row, col);
-        const progress = this.calculateCellProgress(cell, row);
-
-        return {
-          ...acc,
-          [index.toString()]: { ...cell, progress },
-          [SESSION_TABLE_ROW_NAME_KEY]: row.name,
-        };
-      }, {});
+  constructor({ cols, rows }: ExtendedSession) {
+    Object.assign(this, {
+      columns: cols,
+      displayedColumns: this.buildDisplayedColumns(cols),
+      dataSource: this.buildDataSource(rows),
     });
   }
 
-  private findCell(cells: SessionCell[], row: SessionRow, col: SessionCol): SessionCell {
-    return cells.find(cell => {
-      return cell.rowId === row.id && cell.colId === col.id;
-    }) ?? EMPTY_SESSION_CELL;
+  private buildDisplayedColumns(cols: SessionCol[]): string[] {
+    return [this.ROW_NAME_KEY, ...cols.map((_, i) => i.toString())];
   }
 
-  private calculateCellProgress(cell: SessionCell, row: SessionRow): number {
-    return row.minValue ? Math.round((cell.value / row.minValue) * 100) : 0;
-  }
-
-  private getWeekDayString(date: Date): string {
-    return date.toLocaleDateString('ru-RU', { weekday: 'short' });
-  }
-
-  private getDateString(date: Date): string {
-    return date.toLocaleDateString('ru-RU');
+  private buildDataSource(rows: SessionRow[]): Record<string, SessionCell>[] {
+    return rows.map(row => row.cells.reduce((cells, cell, index) => {
+      return { ...cells, [index.toString()]: cell, [this.ROW_NAME_KEY]: row.name };
+    }, {}));
   }
 }

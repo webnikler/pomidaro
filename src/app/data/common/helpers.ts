@@ -1,10 +1,4 @@
-import { Timestamp } from '@angular/fire/firestore';
 import { extractErrorMessage } from '@helpers';
-
-
-export function convertTimestampToDate(timestamp: Timestamp) {
-  return new Date(timestamp.seconds * 1000);
-}
 
 export type State<T> = {
   data: T,

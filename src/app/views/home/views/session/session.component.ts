@@ -20,7 +20,7 @@ export class AppSessionViewComponent {
   }
 
   private get lastSessionId() {
-    return this.sessionCollection.lastSession()?.id;
+    return this.sessionCollection.sortedSessions()[0]?.id;
   }
 
   ngOnInit() {

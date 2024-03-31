@@ -7,17 +7,12 @@ import { SessionApiService } from './session-api.service';
 
 const DEFAILT_STATE: State<Session[]> = createState([]);
 
-const sortSessions = (s1: Session, s2: Session) => +s2.created - +s1.created;
-
 export const SessionCollectionStore = signalStore(
   withState<State<Session[]>>(DEFAILT_STATE),
 
   withComputed(({ data }) => ({
-    lastSession: computed(() => {
-      return data().sort(sortSessions)[0];
-    }),
     sortedSessions: computed(() => {
-      return data().sort(sortSessions);
+      return data().sort((s1, s2) => +s2.created - +s1.created);
     })
   })),
 
