@@ -9,7 +9,7 @@ export const APP_ROUTES: Routes = [
   },
   {
     path: 'auth',
-    loadComponent: () => import('./views/auth/auth.component').then(m => m.AppAuthViewComponent),
+    loadComponent: () => import('./views/auth/auth.component').then(m => m.AuthViewComponent),
     ...canActivate(() => redirectLoggedInTo([''])),
   },
   {

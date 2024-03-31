@@ -17,6 +17,6 @@ import { RouterLink } from '@angular/router';
     FlexLayoutModule,
   ]
 })
-export class AppHomeSidenavComponent {
+export class HomeSidenavComponent {
 
 }

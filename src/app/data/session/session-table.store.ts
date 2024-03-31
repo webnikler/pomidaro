@@ -1,7 +1,7 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { EMPTY_SESSION, SessionTable, ExtendedSession } from './session.models';
+import { SessionTable, ExtendedSession } from './session.models';
 
-const DEFAULT_STATE = new SessionTable(EMPTY_SESSION);
+const DEFAULT_STATE = new SessionTable(new ExtendedSession());
 
 export const SessionTableStore = signalStore(
   withState<SessionTable>(DEFAULT_STATE),

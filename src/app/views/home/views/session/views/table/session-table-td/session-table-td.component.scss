@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+  section.pomidaro {
+    position: relative;
+
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}

@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SessionTableStore } from '@data/session/session-table.store';
+import { SessionTableTdComponent } from './session-table-td/session-table-td.component';
+import { SessionTableThComponent } from './session-table-th/session-table-th.component';
 
 @Component({
   selector: 'app-session-table-view',
@@ -12,9 +13,10 @@ import { SessionTableStore } from '@data/session/session-table.store';
   imports: [
     MatTableModule,
     MatIcon,
-    MatProgressSpinnerModule,
+    SessionTableTdComponent,
+    SessionTableThComponent,
   ],
 })
-export class AppSessionTableViewComponent {
+export class SessionTableViewComponent {
   readonly table = inject(SessionTableStore);
 }

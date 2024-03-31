@@ -25,6 +25,7 @@ export type OriginalSessionCol = {
 
 export type OriginalSessionRow = {
   id: Id;
+  index: number;
   name: string;
   minValue: number;
   trackingType: OriginalSessionRowTrackingType;

@@ -13,7 +13,7 @@ import { map } from 'rxjs';
     AsyncPipe,
   ],
 })
-export class AppUserViewComponent {
+export class UserViewComponent {
   private readonly route = inject(ActivatedRoute);
 
   readonly mode$ = this.route.data.pipe(map(data => data['mode']));

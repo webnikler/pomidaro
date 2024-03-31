@@ -10,7 +10,7 @@ import { SessionCollectionStore } from '@data/session';
     RouterOutlet,
   ],
 })
-export class AppSessionViewComponent {
+export class SessionViewComponent {
   private readonly sessionCollection = inject(SessionCollectionStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);

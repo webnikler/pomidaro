@@ -2,13 +2,12 @@ import { MatTabNav } from '@angular/material/tabs';
 import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatTabsModule } from '@angular/material/tabs';
-import { SessionCollectionStore, SessionStore } from '@data/session';
-import { Id } from '@data/common/types';
+import { SessionCollectionStore } from '@data/session';
 
 @Component({
   selector: 'app-home-header',
@@ -19,6 +18,7 @@ import { Id } from '@data/common/types';
     NgIf,
     MatIcon,
     RouterLink,
+    RouterLinkActive,
     MatButtonModule,
     MatToolbarModule,
     FlexLayoutModule,
@@ -26,20 +26,10 @@ import { Id } from '@data/common/types';
     MatTabsModule,
   ],
 })
-export class AppHomeHeaderComponent {
+export class HomeHeaderComponent {
   private readonly sessionCollection = inject(SessionCollectionStore);
-  private readonly session = inject(SessionStore);
-  private readonly router = inject(Router);
-
-  get currentSessionId() {
-    return this.session.data()?.id;
-  }
 
   get sessions() {
     return this.sessionCollection.sortedSessions();
-  }
-
-  selectSession(id: Id) {
-    this.router.navigate(['home/session', id]);
   }
 }

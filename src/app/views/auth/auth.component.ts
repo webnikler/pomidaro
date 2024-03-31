@@ -22,7 +22,7 @@ import { MatCardModule } from '@angular/material/card';
     AsyncPipe,
   ],
 })
-export class AppAuthViewComponent {
+export class AuthViewComponent {
   private readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
 

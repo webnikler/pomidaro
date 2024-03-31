@@ -2,8 +2,8 @@ import { Component, effect, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthStore } from '@data/auth';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { AppHomeHeaderComponent } from './components/header/header.component';
-import { AppHomeSidenavComponent } from './components/sidenav/sidenav.component';
+import { HomeHeaderComponent } from './components/header/header.component';
+import { HomeSidenavComponent } from './components/sidenav/sidenav.component';
 import { MatTabNavPanel } from '@angular/material/tabs';
 
 @Component({
@@ -14,12 +14,12 @@ import { MatTabNavPanel } from '@angular/material/tabs';
   imports: [
     MatSidenavModule,
     RouterOutlet,
-    AppHomeHeaderComponent,
-    AppHomeSidenavComponent,
+    HomeHeaderComponent,
+    HomeSidenavComponent,
     MatTabNavPanel,
   ],
 })
-export class AppHomeViewComponent {
+export class HomeViewComponent {
   private readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
 
