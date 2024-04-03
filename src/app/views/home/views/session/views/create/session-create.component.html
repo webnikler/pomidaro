@@ -1,63 +1,56 @@
-<mat-stepper [linear]="true" #stepper>
+<mat-stepper [linear]="true" #stepper (selectedIndexChange)="onStepIndexChange($event)">
 
   <!--  Step 1 -->
-  <mat-step color="warn" [stepControl]="mainSettingsFormGroup">
-    <form [formGroup]="mainSettingsFormGroup" fxLayout="column" fxFlex="40">
-      <ng-template matStepLabel>Основные настройки</ng-template>
-      <mat-form-field color="accent">
-        <mat-label>Название сессии</mat-label>
-        <input matInput placeholder="Название сессии" formControlName="sessionName" required>
-      </mat-form-field>
-      <mat-form-field color="accent">
-        <mat-label>Продолжительность - {{ sessionDaysCountString }}</mat-label>
-        <mat-date-range-input [formGroup]="mainSettingsFormGroup" [rangePicker]="picker">
-          <input readonly matStartDate formControlName="startDate" placeholder="Начало сессии">
-          <input required readonly matEndDate formControlName="endDate" placeholder="Конец сессии">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker (closed)="buildCols()" #picker></mat-date-range-picker>
-      </mat-form-field>
-    </form>
+  <mat-step color="warn" [stepControl]="sessionMainSettingsForm">
+    <ng-template matStepLabel>Основные настройки</ng-template>
+    <session-main-settings-step [form]="sessionMainSettingsForm" />
   </mat-step>
 
   <!--  Step 2 -->
   <mat-step color="warn">
     <ng-template matStepLabel>Параметры дней</ng-template>
-    <table mat-table [dataSource]="cols">
-      <ng-container matColumnDef="displayedDate">
-        <th mat-header-cell *matHeaderCellDef>Дата</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.displayedDate }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="weekday">
-        <th mat-header-cell *matHeaderCellDef>День недели</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.weekday }} {{ getSymbol(element.type) }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef>Челлендж</th>
-        <td mat-cell *matCellDef="let element">
-          <mat-select [(value)]="element.type">
-            <mat-option [value]="COL_TYPE.default">Обычный</mat-option>
-            <mat-option [value]="COL_TYPE.pomidaro">Помидорный</mat-option>
-            <mat-option [value]="COL_TYPE.weekend">Выходной</mat-option>
-          </mat-select>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedCols"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedCols;"></tr>
-    </table>
+    <session-cols-settings-step [settings]="sessionColsSettings" />
   </mat-step>
 
   <!--  Step 3 -->
   <mat-step color="warn">
-    <ng-template matStepLabel>Настройка элементов</ng-template>
-    <p>You are now done.</p>
-    <div>
-      step 1
-    </div>
+    <ng-template matStepLabel>Настройка позиций</ng-template>
+
+    <table mat-table [dataSource]="rows">
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef>#</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.index }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Название</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.name }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="trackingType">
+        <th mat-header-cell *matHeaderCellDef>Тип значения</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.trackingType }}
+          <!-- <mat-select [(value)]="element.type">
+            <mat-option [value]="COL_TYPE.default">Обычный</mat-option>
+            <mat-option [value]="COL_TYPE.pomidaro">Помидорный</mat-option>
+            <mat-option [value]="COL_TYPE.weekend">Выходной</mat-option>
+          </mat-select> -->
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="minValue">
+        <th mat-header-cell *matHeaderCellDef>Минимальное значение</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.minValue }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedCols2"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedCols2;"></tr>
+    </table>
+
+    <button mat-raised-button (click)="addRow()">Добавить</button>
   </mat-step>
 
 </mat-stepper>

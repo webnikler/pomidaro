@@ -24,5 +24,9 @@ export const SessionStore = signalStore(
     clear() {
       patchState(store, createState(new ExtendedSession()));
     },
+
+    updateData(data: Partial<ExtendedSession>) {
+      patchState(store, { data: { ...store.data(), ...data } });
+    },
   })),
 );

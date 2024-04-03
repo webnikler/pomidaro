@@ -5,7 +5,9 @@ export type OriginalSession = {
   id: Id;
   ownerId: Id;
   name: string;
-  created: Timestamp;
+  createdDate: Timestamp;
+  startDate: Timestamp;
+  endDate: Timestamp;
 }
 
 export type OriginalSessionExtensions = {

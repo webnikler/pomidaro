@@ -7,11 +7,15 @@ import {
 } from './session.types';
 import { Timestamp } from '@angular/fire/firestore';
 
+const EMPTY_DATE = Timestamp.now();
+
 const EMPTY_SESSION: OriginalSession = {
   id: '',
   ownerId: '',
   name: '',
-  created: Timestamp.now(),
+  createdDate: EMPTY_DATE,
+  startDate: EMPTY_DATE,
+  endDate: EMPTY_DATE,
 };
 
 const EMPTY_SESSION_CELL: OriginalSessionCell = {
@@ -56,16 +60,21 @@ export enum SESSION_ROW_TRACKING_TYPE {
   count,
 }
 
-export class Session implements Omit<OriginalSession, 'created'> {
+export class Session implements Omit<OriginalSession, 'createdDate' | 'startDate' | 'endDate'> {
   id = EMPTY_SESSION.id;
   ownerId = EMPTY_SESSION.ownerId;
   name = EMPTY_SESSION.name;
 
-  created = EMPTY_SESSION.created.toDate();
+  createdDate = EMPTY_SESSION.createdDate.toDate();
+  startDate = EMPTY_SESSION.startDate.toDate();
+  endDate = EMPTY_SESSION.endDate.toDate();
 
   constructor(session = EMPTY_SESSION) {
     Object.assign(this, session);
-    this.created = session.created.toDate();
+
+    this.createdDate = session.createdDate.toDate();
+    this.startDate = session.startDate.toDate();
+    this.endDate = session.endDate.toDate();
   }
 };
 

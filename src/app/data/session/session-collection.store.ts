@@ -12,7 +12,7 @@ export const SessionCollectionStore = signalStore(
 
   withComputed(({ data }) => ({
     sortedSessions: computed(() => {
-      return data().sort((s1, s2) => +s2.created - +s1.created);
+      return data().sort((s1, s2) => +s2.startDate - +s1.startDate);
     })
   })),
 

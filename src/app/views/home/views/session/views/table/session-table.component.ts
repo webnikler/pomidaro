@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { SessionTableStore } from '@data/session/session-table.store';
-import { SessionTableTdComponent } from './session-table-td/session-table-td.component';
-import { SessionTableThComponent } from './session-table-th/session-table-th.component';
+import { SessionTableTdComponent } from './cells/session-table-td/session-table-td.component';
+import { SessionTableThComponent } from './cells/session-table-th/session-table-th.component';
 
 @Component({
   selector: 'app-session-table-view',
