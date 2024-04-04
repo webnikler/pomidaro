@@ -1,0 +1,58 @@
+<form [formGroup]="mainSettingsForm" fxLayout="column" fxFlex="40">
+  <mat-form-field color="accent">
+    <mat-label>Название сессии</mat-label>
+    <input matInput formControlName="name" placeholder="Название сессии" required>
+  </mat-form-field>
+
+  <mat-form-field color="accent">
+    <mat-label>Период сессии</mat-label>
+    <mat-date-range-input [formGroup]="mainSettingsForm" [rangePicker]="picker">
+      <input readonly matStartDate formControlName="startDate" placeholder="Начало сессии">
+      <input required readonly matEndDate formControlName="endDate" placeholder="Конец сессии">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker (closed)="onDatepickerClosed()" #picker></mat-date-range-picker>
+  </mat-form-field>
+
+  <mat-form-field color="accent">
+    <mat-label>Продолжительность</mat-label>
+    <mat-slider [min]="1" [max]="14">
+      <input matInput formControlName="duration" matSliderThumb (change)="onDurationChange()">
+    </mat-slider>
+    {{ mainSettingsForm.value.duration }} дней
+  </mat-form-field>
+
+  <button (click)="next.emit()" [disabled]="!completed" mat-raised-button color="warn">
+    Далее <mat-icon iconPositionEnd>start</mat-icon>
+  </button>
+</form>
+
+<mat-card fxFlex="60">
+  <mat-card-content>
+    <table mat-table [dataSource]="daysTableDataSource">
+      <ng-container matColumnDef="displayedDate">
+        <th mat-header-cell *matHeaderCellDef>Дата</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.displayedDate }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="weekday">
+        <th mat-header-cell *matHeaderCellDef>День недели</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-select [(value)]="element.type">
+            <mat-select-trigger>
+              <weekday [colType]="element.type" [weekday]="element.weekday" />
+            </mat-select-trigger>
+            @for (type of dayTypes; track type.value) {
+            <mat-option [value]="type.value">
+              <weekday [colType]="type.value" [weekday]="element.weekday" />
+            </mat-option>
+            }
+          </mat-select>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="daysTableCols"></tr>
+      <tr mat-row *matRowDef="let row; columns: daysTableCols"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

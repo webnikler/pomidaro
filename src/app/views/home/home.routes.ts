@@ -5,8 +5,8 @@ import { authGuard } from './guards/auth.guard';
 import { SessionApiService, SessionCollectionStore, SessionStore } from '@data/session';
 import { sessionCollectionResolver } from './resolvers/session-collection.resolver';
 import { SessionTableStore } from '@data/session/session-table.store';
-import { SESSION_ROUTES } from './views/session/session.routes';
-import { USER_ROUTES } from './views/user/user.routes';
+import { SESSION_ROUTES } from './screens/session/session.routes';
+import { USER_ROUTES } from './screens/user/user.routes';
 
 const ROOT: Route = {
   path: '',

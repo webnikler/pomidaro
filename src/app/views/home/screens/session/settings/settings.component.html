@@ -1,15 +1,9 @@
-<mat-stepper [linear]="true" #stepper (selectedIndexChange)="onStepIndexChange($event)">
+<mat-stepper [linear]="true" #stepper>
 
   <!--  Step 1 -->
-  <mat-step color="warn" [stepControl]="sessionMainSettingsForm">
+  <mat-step color="warn" [completed]="mainSettinsStepCompleted">
     <ng-template matStepLabel>Основные настройки</ng-template>
-    <session-main-settings-step [form]="sessionMainSettingsForm" />
-  </mat-step>
-
-  <!--  Step 2 -->
-  <mat-step color="warn">
-    <ng-template matStepLabel>Параметры дней</ng-template>
-    <session-cols-settings-step [settings]="sessionColsSettings" />
+    <main-settings-step (next)="stepper.next()" [(completed)]="mainSettinsStepCompleted" />
   </mat-step>
 
   <!--  Step 3 -->
