@@ -3,7 +3,7 @@ import { sessionTableResolver } from '../../resolvers/session-table.resolver';
 import { sessionResolver } from '../../resolvers/session.resolver';
 import { SessionViewComponent } from './session.component';
 import { SessionTableViewComponent } from './views/table/session-table.component';
-import { SessionCreateViewComponent } from './views/create/session-create.component';
+import { SessionSettingsComponent } from './views/settings/settings.component';
 import { createSessionResolver } from '../../resolvers/create-session.resolver';
 
 export const SESSION_ROUTES: Routes = [
@@ -16,7 +16,7 @@ export const SESSION_ROUTES: Routes = [
     children: [
       {
         path: '',
-        component: SessionCreateViewComponent,
+        component: SessionSettingsComponent,
       },
     ],
   },
