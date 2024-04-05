@@ -12,9 +12,9 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<nav mat-tab-nav-bar [tabPanel]="tabPanel" backgroundColor="warn" mat-stretch-tabs="false">
+<nav mat-tab-nav-bar [tabPanel]="tabPanel" color="primary" mat-stretch-tabs="false">
   <a mat-tab-link routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" [routerLink]="['session/create']">
-    <mat-icon>add</mat-icon>
+    <mat-icon>post_add</mat-icon>
   </a>
 
   @for (session of sessions; track session) {

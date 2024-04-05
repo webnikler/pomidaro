@@ -1,0 +1,14 @@
+@use '@angular/material' as mat;
+
+$theme: mat.define-dark-theme((density: -4));
+
+:host {
+  table {
+    @include mat.form-field-theme($theme);
+    @include mat.select-theme($theme);
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}

@@ -29,7 +29,7 @@ export type OriginalSessionRow = {
   id: Id;
   index: number;
   name: string;
-  minValue: number;
+  minValue: number | string | boolean;
   trackingType: OriginalSessionRowTrackingType;
   editable: boolean;
 }

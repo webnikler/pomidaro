@@ -32,7 +32,7 @@ const EMPTY_SESSION_EXTENTIONS: OriginalSessionExtensions = {
 };
 
 const EMPTY_SESSION_ROW: OriginalSessionRow = {
-  trackingType: 'unknown',
+  trackingType: 'pomidaro',
   editable: false,
   minValue: 0,
   id: '',
@@ -142,7 +142,7 @@ export class SessionCell implements OriginalSessionCell {
   value = EMPTY_SESSION_CELL.value;
 
   progress = 0;
-  minValue = 0;
+  minValue: number | string | boolean = 0;
   trackingType = SESSION_ROW_TRACKING_TYPE.unknown;
 
   constructor(cell = EMPTY_SESSION_CELL, row = new SessionRow()) {
@@ -154,7 +154,7 @@ export class SessionCell implements OriginalSessionCell {
   }
 
   private calculateProgress(row: SessionRow): number {
-    return row.minValue ? Math.round((this.value / row.minValue) * 100) : 0;
+    return typeof row.minValue === 'number' ? Math.round((this.value / row.minValue) * 100) : 0;
   }
 }
 

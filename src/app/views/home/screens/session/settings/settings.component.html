@@ -1,50 +1,18 @@
-<mat-stepper [linear]="true" #stepper>
+<mat-stepper [linear]="true" #stepper [selectedIndex]="0">
 
   <!--  Step 1 -->
-  <mat-step color="warn" [completed]="mainSettinsStepCompleted">
-    <ng-template matStepLabel>Основные настройки</ng-template>
+  <mat-step color="accent" [completed]="mainSettinsStepCompleted" state="settings" label="Основные настройки">
     <main-settings-step (next)="stepper.next()" [(completed)]="mainSettinsStepCompleted" />
   </mat-step>
 
+  <!--  Step 2 -->
+  <mat-step color="accent" [completed]="activitySettingsStepCompleted" state="event_note" label="Настройка активностей">
+    <activity-settings-step [(completed)]="activitySettingsStepCompleted" (next)="stepper.next()" (back)="stepper.previous()" />
+  </mat-step>
+
   <!--  Step 3 -->
-  <mat-step color="warn">
-    <ng-template matStepLabel>Настройка позиций</ng-template>
+  <mat-step color="accent" state="pie_chart" label="Настройка отчетов">
 
-    <table mat-table [dataSource]="rows">
-      <ng-container matColumnDef="index">
-        <th mat-header-cell *matHeaderCellDef>#</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.index }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Название</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.name }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="trackingType">
-        <th mat-header-cell *matHeaderCellDef>Тип значения</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.trackingType }}
-          <!-- <mat-select [(value)]="element.type">
-            <mat-option [value]="COL_TYPE.default">Обычный</mat-option>
-            <mat-option [value]="COL_TYPE.pomidaro">Помидорный</mat-option>
-            <mat-option [value]="COL_TYPE.weekend">Выходной</mat-option>
-          </mat-select> -->
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="minValue">
-        <th mat-header-cell *matHeaderCellDef>Минимальное значение</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.minValue }}
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedCols2"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedCols2;"></tr>
-    </table>
-
-    <button mat-raised-button (click)="addRow()">Добавить</button>
   </mat-step>
 
 </mat-stepper>

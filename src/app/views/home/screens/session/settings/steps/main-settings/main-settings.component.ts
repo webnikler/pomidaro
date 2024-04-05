@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -8,7 +8,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { addDays, addWeeks, differenceInDays, startOfWeek } from 'date-fns';
 import { SettingsStep } from '../settings-step';
 import { OriginalSessionColType } from '@data/session/session.types';
-import { SESSION_COL_TYPE } from '@data/session';
+import { SESSION_COL_TYPE, SessionCollectionStore } from '@data/session';
 import { SessionCol } from '@data/session/session.models';
 import { getDaysRange } from '@shared/helpers/date.helper';
 import { Timestamp } from '@angular/fire/firestore';
@@ -51,10 +51,14 @@ const DAY_TYPES = [
   ],
 })
 export class MainSettingsStepComponent extends SettingsStep implements OnInit {
+  readonly sessions = inject(SessionCollectionStore);
+
   readonly dayTypes = DAY_TYPES;
   readonly daysTableCols: Array<keyof SessionCol> = ['displayedDate', 'weekday'];
 
   daysTableDataSource: SessionCol[] = [];
+
+  sessionIDForCopying = '';
 
   readonly mainSettingsForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],

@@ -1,33 +1,64 @@
-<form [formGroup]="mainSettingsForm" fxLayout="column" fxFlex="40">
-  <mat-form-field color="accent">
-    <mat-label>Название сессии</mat-label>
-    <input matInput formControlName="name" placeholder="Название сессии" required>
-  </mat-form-field>
+<main fxFlex="40" fxLayout="column" fxLayoutGap="16px">
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title>Создание сессии</mat-card-title>
+      <mat-card-subtitle>
+        Вы можете скопировать настройки из другой сессии
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content fxLayout="column" fxLayoutGap="16px">
+      <p></p>
+      <form [formGroup]="mainSettingsForm" fxLayout="column">
+        <mat-form-field color="primary">
+          <mat-label>Скопировать настройки из:</mat-label>
+          <mat-select [(value)]="sessionIDForCopying">
+            <mat-option value="">Не выбрано</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-  <mat-form-field color="accent">
-    <mat-label>Период сессии</mat-label>
-    <mat-date-range-input [formGroup]="mainSettingsForm" [rangePicker]="picker">
-      <input readonly matStartDate formControlName="startDate" placeholder="Начало сессии">
-      <input required readonly matEndDate formControlName="endDate" placeholder="Конец сессии">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker (closed)="onDatepickerClosed()" #picker></mat-date-range-picker>
-  </mat-form-field>
+        <mat-form-field color="primary">
+          <mat-label>Название сессии</mat-label>
+          <input matInput formControlName="name" placeholder="Название сессии" required>
+        </mat-form-field>
 
-  <mat-form-field color="accent">
-    <mat-label>Продолжительность</mat-label>
-    <mat-slider [min]="1" [max]="14">
-      <input matInput formControlName="duration" matSliderThumb (change)="onDurationChange()">
-    </mat-slider>
-    {{ mainSettingsForm.value.duration }} дней
-  </mat-form-field>
+        <mat-form-field color="primary">
+          <mat-label>Период сессии</mat-label>
+          <mat-date-range-input [formGroup]="mainSettingsForm" [rangePicker]="picker">
+            <input readonly matStartDate formControlName="startDate" placeholder="Начало сессии">
+            <input required readonly matEndDate formControlName="endDate" placeholder="Конец сессии">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker (closed)="onDatepickerClosed()" #picker></mat-date-range-picker>
+        </mat-form-field>
 
-  <button (click)="next.emit()" [disabled]="!completed" mat-raised-button color="warn">
-    Далее <mat-icon iconPositionEnd>start</mat-icon>
-  </button>
-</form>
+        <mat-card appearance="outlined" fxLayoyt="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+          <p></p>
+          <mat-slider color="primary" fxFlex [min]="1" [max]="14" step="1" showTickMarks>
+            <input matInput formControlName="duration" matSliderThumb (change)="onDurationChange()">
+          </mat-slider>
+          <p></p>
+          <p></p>
+          <span>{{ mainSettingsForm.value.duration }} дней</span>
+          <p></p>
+          <p></p>
+        </mat-card>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <mat-card appearance="outlined">
+    <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <button (click)="next.emit()" [disabled]="!completed" mat-raised-button color="accent">
+        ДАЛЕЕ <mat-icon iconPositionEnd>east</mat-icon>
+      </button>
+      <span fxLayoutAlign="center" fxLayoutGap="4px">
+        <mat-icon inline>event_note</mat-icon> <span>Настройка активностей</span>
+      </span>
+    </mat-card-content>
+  </mat-card>
+</main>
 
-<mat-card fxFlex="60">
+
+<mat-card fxFlex="60" appearance="outlined">
   <mat-card-content>
     <table mat-table [dataSource]="daysTableDataSource">
       <ng-container matColumnDef="displayedDate">
@@ -45,7 +76,7 @@
             </mat-select-trigger>
             @for (type of dayTypes; track type.value) {
             <mat-option [value]="type.value">
-              <weekday [colType]="type.value" [weekday]="element.weekday" />
+              <weekday [colType]="type.value" [weekday]="type.title" />
             </mat-option>
             }
           </mat-select>

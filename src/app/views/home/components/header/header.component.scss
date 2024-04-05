@@ -1,4 +1,10 @@
+@use '@angular/material' as mat;
+
+$tabs-theme: mat.define-dark-theme((density: -1));
+
 :host {
   display: block;
   width: 100%;
+
+  @include mat.tabs-theme($tabs-theme);
 }
