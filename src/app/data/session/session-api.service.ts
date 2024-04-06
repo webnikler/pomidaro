@@ -19,6 +19,19 @@ export class SessionApiService {
     return new ExtendedSession(baseSession, { cols, rows, cells });
   }
 
+  async createSession(payload: ExtendedSession): Promise<ExtendedSession> {
+    const session = await this.api.create('sessions/', payload.getCreatePayload());
+
+    const [cols, rows] = await Promise.all([
+      this.api.createCollection<OriginalSessionCol>(`sessions/${session.id}/cols`, payload.getCreateColsPayload()),
+      this.api.createCollection<OriginalSessionRow>(`sessions/${session.id}/rows`, payload.getCreateRowsPayload()),
+    ]);
+
+    const cells = await this.api.createCollection(`sessions/${session.id}/cells`, payload.getCreateCellsPayload(cols, rows));
+
+    return new ExtendedSession(session, { cols, rows, cells });
+  }
+
   private async getBaseSession(id: Id): Promise<OriginalSession> {
     return this.api.get<OriginalSession>(`sessions/${id}/`);
   }

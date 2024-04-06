@@ -1,3 +1,4 @@
+import { ExtendedSession } from '@data/session/session.models';
 import { Id } from './../common/types';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { computed, inject } from '@angular/core';
@@ -26,5 +27,8 @@ export const SessionCollectionStore = signalStore(
         patchState(store, stateError(error));
       }
     },
+    add(session: ExtendedSession) {
+      patchState(store, { data: [...store.data(), session] });
+    }
   })),
 );

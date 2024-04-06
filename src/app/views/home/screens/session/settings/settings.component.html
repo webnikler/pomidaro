@@ -7,7 +7,7 @@
 
   <!--  Step 2 -->
   <mat-step color="accent" [completed]="activitySettingsStepCompleted" state="event_note" label="Настройка активностей">
-    <activity-settings-step [(completed)]="activitySettingsStepCompleted" (next)="stepper.next()" (back)="stepper.previous()" />
+    <activity-settings-step [(completed)]="activitySettingsStepCompleted" (create)="onCreate()" (next)="stepper.next()" (back)="stepper.previous()" />
   </mat-step>
 
   <!--  Step 3 -->

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +14,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgForOf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { map } from 'rxjs';
+import { debounceTime, map, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type TrackingTypeOption = { title: string, value: SESSION_ROW_TRACKING_TYPE };
 
@@ -51,7 +52,7 @@ const TRACKING_TYPES: TrackingTypeOption[] = [
   ],
 })
 export class AcitvitySettingsStepComponent extends SettingsStep {
-  readonly tableColumnNames = ['index', 'name', 'trackingType', 'minValue', 'actions'];
+  readonly tableColumnNames: Array<keyof SessionRow | 'actions'> = ['index', 'name', 'trackingType', 'minValue', 'actions'];
 
   readonly trackingTypes = TRACKING_TYPES;
 
@@ -63,17 +64,28 @@ export class AcitvitySettingsStepComponent extends SettingsStep {
     ])
   });
 
-  dataSource = [
-    new SessionRow(),
-  ];
+  dataSource = [new SessionRow()];
 
   @Output() next = new EventEmitter();
   @Output() back = new EventEmitter();
+  @Output() create = new EventEmitter();
 
   @Input() completed = false;
   @Output() completedChange = this.form.statusChanges.pipe(
     map(status => status === 'VALID'),
   );
+
+  private destroyRef = inject(DestroyRef);
+
+  ngOnInit() {
+    this.form.valueChanges
+      .pipe(
+        debounceTime(1000),
+        tap(this.syncChangesWithStore.bind(this)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe()
+  }
 
   getTrackingTypeInputType(trackingType: SESSION_ROW_TRACKING_TYPE) {
     return trackingType === SESSION_ROW_TRACKING_TYPE.time ? 'time' : 'number';
@@ -91,8 +103,8 @@ export class AcitvitySettingsStepComponent extends SettingsStep {
   addRow() {
     const row = new SessionRow();
 
-    this.form.controls.activities.push(this.createRowFormGroup(row));
     this.dataSource = [...this.dataSource, row];
+    this.form.controls.activities.push(this.createRowFormGroup(row));
   }
 
   incrementMinValue(index: number) {
@@ -111,8 +123,13 @@ export class AcitvitySettingsStepComponent extends SettingsStep {
   }
 
   removeRow(index: number) {
-    this.form.controls.activities.removeAt(index);
     this.dataSource = this.dataSource.filter((_, i) => index !== i);
+    this.form.controls.activities.removeAt(index);
+  }
+
+  private syncChangesWithStore() {
+    const rows = this.dataSource.map((row, index) => row.update({ index }));
+    this.session.update({ rows });
   }
 
   private incrementTime(time: string) {

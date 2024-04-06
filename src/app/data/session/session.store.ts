@@ -25,8 +25,21 @@ export const SessionStore = signalStore(
       patchState(store, createState(new ExtendedSession()));
     },
 
-    updateData(data: Partial<ExtendedSession>) {
-      patchState(store, { data: { ...store.data(), ...data } });
+    update(data: Partial<ExtendedSession>) {
+      patchState(store, { data: new ExtendedSession().update({ ...store.data(), ...data }) });
     },
+
+    async create() {
+      patchState(store, stateLoading());
+
+      try {
+        return await sessionApi.createSession(store.data());
+      } catch (error) {
+        patchState(store, stateError(error));
+        throw error;
+      } finally {
+        patchState(store, stateLoading(false));
+      }
+    }
   })),
 );

@@ -1,14 +1,17 @@
 <main fxFlex="40" fxLayout="column" fxLayoutGap="16px">
   <mat-card appearance="outlined">
+
     <mat-card-header>
       <mat-card-title>Создание сессии</mat-card-title>
       <mat-card-subtitle>
         Вы можете скопировать настройки из другой сессии
       </mat-card-subtitle>
     </mat-card-header>
+
     <mat-card-content fxLayout="column" fxLayoutGap="16px">
       <p></p>
-      <form [formGroup]="mainSettingsForm" fxLayout="column">
+      <form [formGroup]="form" fxLayout="column">
+
         <mat-form-field color="primary">
           <mat-label>Скопировать настройки из:</mat-label>
           <mat-select [(value)]="sessionIDForCopying">
@@ -23,7 +26,7 @@
 
         <mat-form-field color="primary">
           <mat-label>Период сессии</mat-label>
-          <mat-date-range-input [formGroup]="mainSettingsForm" [rangePicker]="picker">
+          <mat-date-range-input [formGroup]="form" [rangePicker]="picker">
             <input readonly matStartDate formControlName="startDate" placeholder="Начало сессии">
             <input required readonly matEndDate formControlName="endDate" placeholder="Конец сессии">
           </mat-date-range-input>
@@ -38,21 +41,25 @@
           </mat-slider>
           <p></p>
           <p></p>
-          <span>{{ mainSettingsForm.value.duration }} дней</span>
+          <span>{{ form.value.duration }} дней</span>
           <p></p>
           <p></p>
         </mat-card>
+
       </form>
     </mat-card-content>
   </mat-card>
   <mat-card appearance="outlined">
     <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+
       <button (click)="next.emit()" [disabled]="!completed" mat-raised-button color="accent">
         ДАЛЕЕ <mat-icon iconPositionEnd>east</mat-icon>
       </button>
+
       <span fxLayoutAlign="center" fxLayoutGap="4px">
         <mat-icon inline>event_note</mat-icon> <span>Настройка активностей</span>
       </span>
+
     </mat-card-content>
   </mat-card>
 </main>
@@ -60,17 +67,19 @@
 
 <mat-card fxFlex="60" appearance="outlined">
   <mat-card-content>
-    <table mat-table [dataSource]="daysTableDataSource">
+    <table mat-table [dataSource]="dataSource">
+
       <ng-container matColumnDef="displayedDate">
         <th mat-header-cell *matHeaderCellDef>Дата</th>
         <td mat-cell *matCellDef="let element">
           {{ element.displayedDate }}
         </td>
       </ng-container>
+
       <ng-container matColumnDef="weekday">
         <th mat-header-cell *matHeaderCellDef>День недели</th>
         <td mat-cell *matCellDef="let element">
-          <mat-select [(value)]="element.type">
+          <mat-select [(value)]="element.type" (selectionChange)="syncTrigger$.emit()">
             <mat-select-trigger>
               <weekday [colType]="element.type" [weekday]="element.weekday" />
             </mat-select-trigger>
@@ -82,8 +91,9 @@
           </mat-select>
         </td>
       </ng-container>
-      <tr mat-header-row *matHeaderRowDef="daysTableCols"></tr>
-      <tr mat-row *matRowDef="let row; columns: daysTableCols"></tr>
+
+      <tr mat-header-row *matHeaderRowDef="tableColumnNames"></tr>
+      <tr mat-row *matRowDef="let row; columns: tableColumnNames"></tr>
     </table>
   </mat-card-content>
 </mat-card>

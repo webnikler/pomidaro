@@ -1,9 +1,12 @@
+import { Id } from '@data/common/types';
 import {
   OriginalSession,
   OriginalSessionCell,
   OriginalSessionCol,
+  OriginalSessionColType,
   OriginalSessionExtensions,
   OriginalSessionRow,
+  OriginalSessionRowTrackingType,
 } from './session.types';
 import { Timestamp } from '@angular/fire/firestore';
 
@@ -33,7 +36,6 @@ const EMPTY_SESSION_EXTENTIONS: OriginalSessionExtensions = {
 
 const EMPTY_SESSION_ROW: OriginalSessionRow = {
   trackingType: 'pomidaro',
-  editable: false,
   minValue: 0,
   id: '',
   name: '',
@@ -76,6 +78,16 @@ export class Session implements Omit<OriginalSession, 'createdDate' | 'startDate
     this.startDate = session.startDate.toDate();
     this.endDate = session.endDate.toDate();
   }
+
+  getCreatePayload(): Omit<OriginalSession, 'id'> {
+    return {
+      name: this.name,
+      ownerId: this.ownerId,
+      startDate: Timestamp.fromDate(this.startDate),
+      endDate: Timestamp.fromDate(this.endDate),
+      createdDate: Timestamp.now(),
+    };
+  }
 };
 
 export class ExtendedSession extends Session {
@@ -87,6 +99,22 @@ export class ExtendedSession extends Session {
 
     this.cols = cols.map(col => new SessionCol(col)).sort((a, b) => +a.date - +b.date);
     this.rows = rows.map(row => new SessionRow(row, cells, this.cols)).sort((a, b) => a.index - b.index);
+  }
+
+  update(data: Partial<ExtendedSession>) {
+    return Object.assign(this, data);
+  }
+
+  getCreateColsPayload(): Omit<OriginalSessionCol, 'id'>[] {
+    return this.cols.map(c => c.getPayload());
+  }
+
+  getCreateRowsPayload(): Omit<OriginalSessionRow, 'id'>[] {
+    return this.rows.map(r => r.getPayload());
+  }
+
+  getCreateCellsPayload(cols: OriginalSessionCol[], rows: OriginalSessionRow[]): Omit<OriginalSessionCell, 'id'>[] {
+    return rows.map(row => cols.map(col => ({ colId: col.id, rowId: row.id, value: '' }))).flat();
   }
 }
 
@@ -108,11 +136,17 @@ export class SessionCol implements Omit<OriginalSessionCol, 'date' | 'type'> {
     this.weekday = this.date.toLocaleDateString('ru-RU', { weekday: 'long' });
     this.weekdayShort = this.date.toLocaleDateString('ru-RU', { weekday: 'short' });
   }
+
+  getPayload(): Omit<OriginalSessionCol, 'id'> {
+    const date = Timestamp.fromDate(this.date);
+    const type = SESSION_COL_TYPE[this.type] as OriginalSessionColType;
+
+    return { date, type }
+  }
 }
 
 export class SessionRow implements Omit<OriginalSessionRow, 'trackingType'> {
   trackingType = SESSION_ROW_TRACKING_TYPE[EMPTY_SESSION_ROW.trackingType];
-  editable = EMPTY_SESSION_ROW.editable;
   minValue = EMPTY_SESSION_ROW.minValue;
   id = EMPTY_SESSION_ROW.id;
   name = EMPTY_SESSION_ROW.name;
@@ -125,6 +159,30 @@ export class SessionRow implements Omit<OriginalSessionRow, 'trackingType'> {
 
     this.trackingType = SESSION_ROW_TRACKING_TYPE[row.trackingType];
     this.cells = this.buildCells(cells, sortedCols);
+    this.minValue = this.normalizeMinValue(row.minValue as string);
+  }
+
+  getPayload(): Omit<OriginalSessionRow, 'id'> {
+    const data = { index: this.index, name: this.name, minValue: this.minValue };
+    const trackingType = SESSION_ROW_TRACKING_TYPE[this.trackingType] as OriginalSessionRowTrackingType;
+
+    return { ...data, trackingType };
+  }
+
+  update(data: Partial<SessionRow>) {
+    return Object.assign(this, data);
+  }
+
+  private normalizeMinValue(value: string): string | boolean | number {
+    const isTrue = value === true.toString();
+    const isFalse = value === false.toString();
+    const isNumber = !isNaN(Number(value));
+
+    if (isTrue) return true;
+    if (isFalse) return false;
+    if (isNumber) return Number(value);
+
+    return value;
   }
 
   private buildCells(cells: OriginalSessionCell[], sortedCols: SessionCol[]) {
@@ -148,13 +206,32 @@ export class SessionCell implements OriginalSessionCell {
   constructor(cell = EMPTY_SESSION_CELL, row = new SessionRow()) {
     Object.assign(this, cell);
 
-    this.progress = this.calculateProgress(row);
     this.minValue = row.minValue;
     this.trackingType = row.trackingType;
+    this.value = this.normalizeValue();
+    this.progress = this.calculateProgress(row);
+  }
+
+  getPayload(): Partial<OriginalSessionCell> {
+    return { colId: this.colId, rowId: this.rowId, value: this.value };
+  }
+
+  private normalizeValue(): number | string | boolean {
+    switch (this.trackingType) {
+      case SESSION_ROW_TRACKING_TYPE.pomidaro:
+      case SESSION_ROW_TRACKING_TYPE.count:
+        return Number(this.value);
+      case SESSION_ROW_TRACKING_TYPE.mark:
+        return this.value === true.toString() ? true : false;
+      default:
+        return this.value;
+    }
   }
 
   private calculateProgress(row: SessionRow): number {
-    return typeof row.minValue === 'number' ? Math.round((this.value / row.minValue) * 100) : 0;
+    return typeof row.minValue === 'number' && typeof this.value === 'number'
+      ? Math.round((this.value / row.minValue) * 100)
+      : 0;
   }
 }
 

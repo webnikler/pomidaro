@@ -31,12 +31,11 @@ export type OriginalSessionRow = {
   name: string;
   minValue: number | string | boolean;
   trackingType: OriginalSessionRowTrackingType;
-  editable: boolean;
 }
 
 export type OriginalSessionCell = {
   id: Id;
   rowId: Id;
   colId: Id;
-  value: number;
+  value: number | string | boolean;
 }
