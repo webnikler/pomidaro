@@ -220,9 +220,11 @@ export class SessionCell implements OriginalSessionCell {
     switch (this.trackingType) {
       case SESSION_ROW_TRACKING_TYPE.pomidaro:
       case SESSION_ROW_TRACKING_TYPE.count:
-        return Number(this.value);
+        return Number(this.value) || 0;
       case SESSION_ROW_TRACKING_TYPE.mark:
         return this.value === true.toString() ? true : false;
+      case SESSION_ROW_TRACKING_TYPE.time:
+        return this.value || '00:00';
       default:
         return this.value;
     }

@@ -7,12 +7,17 @@ import { SESSION_ROW_TRACKING_TYPE, SessionCell } from '@data/session/session.mo
   selector: 'app-session-table-td',
   standalone: true,
   template: `
-    <ng-container [ngSwitch]="cell.trackingType">
-      <section *ngSwitchCase="TYPE.pomidaro" class="pomidaro">
+    @switch (cell.trackingType) {
+      @case (TYPE.pomidaro) {
+      <section class="pomidaro">
         <mat-progress-spinner mode="determinate" [value]="cell.progress" [color]="progressColor" [diameter]="35" />
         <span>{{ cell.value }}</span>
       </section>
-    </ng-container>
+      }
+      @default {
+        <span>{{ cell.value }}</span>
+      }
+    }
   `,
   styleUrl: './session-table-td.component.scss',
   imports: [
