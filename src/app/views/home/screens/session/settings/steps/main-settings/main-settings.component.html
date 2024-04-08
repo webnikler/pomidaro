@@ -14,7 +14,7 @@
 
         <mat-form-field color="primary">
           <mat-label>Скопировать настройки из:</mat-label>
-          <mat-select [(value)]="sessionIDForCopying">
+          <mat-select [(value)]="sessionIDForCopying" [disabled]="disabled">
             <mat-option value="">Не выбрано</mat-option>
           </mat-select>
         </mat-form-field>
@@ -37,7 +37,7 @@
         <mat-card appearance="outlined" fxLayoyt="row" fxLayoutAlign="center center" fxLayoutGap="8px">
           <p></p>
           <mat-slider color="primary" fxFlex [min]="1" [max]="14" step="1" showTickMarks>
-            <input matInput formControlName="duration" matSliderThumb (change)="onDurationChange()">
+            <input matInput formControlName="duration" matSliderThumb (change)="onDurationChange()" [disabled]="disabled">
           </mat-slider>
           <p></p>
           <p></p>
@@ -79,7 +79,7 @@
       <ng-container matColumnDef="weekday">
         <th mat-header-cell *matHeaderCellDef>День недели</th>
         <td mat-cell *matCellDef="let element">
-          <mat-select [(value)]="element.type" (selectionChange)="syncTrigger$.emit()">
+          <mat-select [(value)]="element.type" (selectionChange)="syncTrigger$.emit()" [disabled]="disabled">
             <mat-select-trigger>
               <weekday [colType]="element.type" [weekday]="element.weekday" />
             </mat-select-trigger>

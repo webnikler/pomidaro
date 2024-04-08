@@ -11,12 +11,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
-  color: inherit !important;
-}
-
-
-
 $theme: mat.define-dark-theme((
   color: (
     primary: mat.define-palette(mat.$grey-palette, A200),
@@ -25,4 +19,5 @@ $theme: mat.define-dark-theme((
   typography: mat.define-typography-config(),
 ));
 
+@include mat.core();
 @include mat.all-component-themes($theme);

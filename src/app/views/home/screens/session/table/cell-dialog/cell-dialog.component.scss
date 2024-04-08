@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  min-width: 300px;
+
+  h2 {
+    padding-bottom: 0;
+  }
+
+  app-session-table-td {
+    width: auto;
+  }
+}

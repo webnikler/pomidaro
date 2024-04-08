@@ -5,6 +5,8 @@ import { SessionCollectionStore, SessionStore } from '@data/session';
 import { MainSettingsStepComponent } from './steps/main-settings/main-settings.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { AcitvitySettingsStepComponent } from './steps/activity-settings/activity-settings.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'session-settings',
@@ -15,6 +17,8 @@ import { AcitvitySettingsStepComponent } from './steps/activity-settings/activit
     MatStepperModule,
     MainSettingsStepComponent,
     AcitvitySettingsStepComponent,
+    MatProgressBarModule,
+    NgIf,
   ],
   providers: [
     {
@@ -25,8 +29,9 @@ import { AcitvitySettingsStepComponent } from './steps/activity-settings/activit
 })
 export class SessionSettingsComponent {
   private readonly sessionCollection = inject(SessionCollectionStore);
-  private readonly session = inject(SessionStore);
-  private readonly router = inject(Router)
+  private readonly router = inject(Router);
+
+  readonly session = inject(SessionStore);
 
   mainSettinsStepCompleted = false;
   activitySettingsStepCompleted = false;

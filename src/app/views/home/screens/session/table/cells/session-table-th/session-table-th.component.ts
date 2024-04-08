@@ -1,17 +1,20 @@
+import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { SESSION_COL_TYPE, SessionCol } from '@data/session/session.models';
+import { WeekdayComponent } from '@shared/components/weekday/weekday.component';
 
 @Component({
   selector: 'app-session-table-th',
   standalone: true,
   template: `
-    <section class="date">{{ col.displayedDate }}</section>
-    <section class="weekday" [class]="weekDayClass">
-      <span>{{ col.weekdayShort }}</span>
-      <span>{{ symbol }}</span>
-    </section>
+    <section class="date">{{ col.date | date: 'd MMMM' }}</section>
+    <weekday [colType]="col.type" [weekday]="col.weekdayShort">
   `,
   styleUrl: './session-table-th.component.scss',
+  imports: [
+    DatePipe,
+    WeekdayComponent,
+  ]
 })
 export class SessionTableThComponent {
   @Input() col = new SessionCol();

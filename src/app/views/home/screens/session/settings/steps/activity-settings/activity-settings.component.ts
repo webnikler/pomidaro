@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgForOf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { debounceTime, map, tap } from 'rxjs';
+import { debounceTime, filter, map, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 type TrackingTypeOption = { title: string, value: SESSION_ROW_TRACKING_TYPE };
@@ -66,12 +66,26 @@ export class AcitvitySettingsStepComponent extends SettingsStep {
 
   dataSource = [new SessionRow()];
 
+  disabled = false;
+
   @Output() next = new EventEmitter();
   @Output() back = new EventEmitter();
   @Output() create = new EventEmitter();
 
+  @Input('disabled') set disabledProp(disabled: boolean) {
+    this.disabled = disabled;
+
+    if (disabled) {
+      this.form.disable();
+    } else {
+      this.form.enable();
+    }
+  }
+
   @Input() completed = false;
+
   @Output() completedChange = this.form.statusChanges.pipe(
+    filter(status => status === 'VALID' || status === 'INVALID'),
     map(status => status === 'VALID'),
   );
 

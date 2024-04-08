@@ -2,4 +2,8 @@
   .cdk-row:hover {
     background-color: rgba(white, 0.01);
   }
+
+  mat-progress-bar {
+    position: absolute;
+  }
 }

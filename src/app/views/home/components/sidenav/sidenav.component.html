@@ -2,3 +2,34 @@
   <mat-toolbar-row>
   </mat-toolbar-row>
 </mat-toolbar>
+
+<mat-list>
+  <mat-list-item>
+    <mat-icon matListItemIcon>article</mat-icon>
+    <span matListItemTitle>{{ session.data().name || 'Без названия' }}</span>
+    <span matListItemLine>{{ session.data().startDate | date:'d MMMM' }} - {{ session.data().endDate | date:'d MMMM' }}</span>
+  </mat-list-item>
+</mat-list>
+<mat-divider></mat-divider>
+<mat-nav-list>
+  <mat-list-item>
+    <mat-icon matListItemIcon>settings</mat-icon>
+    <span matListItemTitle>Настройки</span>
+  </mat-list-item>
+  <mat-list-item [disabled]="!session.data().id">
+    <mat-icon matListItemIcon>table_chart</mat-icon>
+    <span>Таблица</span>
+  </mat-list-item>
+  <mat-list-item [disabled]="!session.data().id">
+    <mat-icon matListItemIcon>pie_chart</mat-icon>
+    <span>Отчеты</span>
+  </mat-list-item>
+  <mat-list-item [disabled]="!session.data().id">
+    <mat-icon matListItemIcon>timer</mat-icon>
+    <span>Таймер</span>
+  </mat-list-item>
+  <mat-list-item [disabled]="!session.data().id">
+    <mat-icon matListItemIcon>timeline</mat-icon>
+    <span>Таймлайн</span>
+  </mat-list-item>
+</mat-nav-list>

@@ -1,13 +1,18 @@
+@if (session.loading()) {
+<mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+}
+
 <mat-stepper [linear]="true" #stepper [selectedIndex]="0">
 
   <!--  Step 1 -->
   <mat-step color="accent" [completed]="mainSettinsStepCompleted" state="settings" label="Основные настройки">
-    <main-settings-step (next)="stepper.next()" [(completed)]="mainSettinsStepCompleted" />
+    <main-settings-step (next)="stepper.next()" [(completed)]="mainSettinsStepCompleted" [disabled]="session.loading()" />
   </mat-step>
 
   <!--  Step 2 -->
   <mat-step color="accent" [completed]="activitySettingsStepCompleted" state="event_note" label="Настройка активностей">
-    <activity-settings-step [(completed)]="activitySettingsStepCompleted" (create)="onCreate()" (next)="stepper.next()" (back)="stepper.previous()" />
+    <activity-settings-step [(completed)]="activitySettingsStepCompleted" (create)="onCreate()" (next)="stepper.next()" (back)="stepper.previous()"
+                            [disabled]="session.loading()" />
   </mat-step>
 
   <!--  Step 3 -->

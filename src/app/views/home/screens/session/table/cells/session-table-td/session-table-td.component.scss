@@ -1,11 +1,64 @@
+@use '@angular/material' as mat;
+
+$spinner-background-theme: mat.define-dark-theme((
+    color: (
+      primary: mat.define-palette(mat.$grey-palette, 700),
+      accent: mat.define-palette(mat.$grey-palette, 500, A100, A400),
+    )
+));
+
+$spinner-foreground-theme: mat.define-dark-theme((
+    color: (
+      primary: mat.define-palette(mat.$yellow-palette, 200),
+      accent: mat.define-palette(mat.$yellow-palette, 500, A100, A400),
+    )
+));
+
+$spinner-foreground-completed-theme: mat.define-dark-theme((
+  color: (
+    primary: mat.define-palette(mat.$red-palette, 400),
+    accent: mat.define-palette(mat.$red-palette, 500, A100, A400),
+  )
+));
+
 :host {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
 
+  .zero-value {
+    opacity: 0.5;
+  }
+
   section.pomidaro {
     position: relative;
+
+    mat-icon.done-label {
+      position: absolute;
+      z-index: 1;
+      top: -4px;
+      right: 1px;
+
+      @include mat.icon-color($spinner-foreground-theme);
+    }
+
+    mat-progress-spinner.foreground-spinner {
+      @include mat.progress-spinner-color($spinner-foreground-theme);
+    }
+
+    mat-progress-spinner.foreground-spinner.completed {
+      @include mat.progress-spinner-color($spinner-foreground-completed-theme);
+    }
+
+    mat-progress-spinner.background-spinner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+
+      @include mat.progress-spinner-color($spinner-background-theme);
+    }
 
     span {
       position: absolute;

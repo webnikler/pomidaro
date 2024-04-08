@@ -17,7 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { WeekdayComponent } from '@shared/components/weekday/weekday.component';
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { debounceTime, map, tap } from 'rxjs';
+import { debounceTime, filter, map, tap } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -35,7 +35,6 @@ const DAY_TYPES = [
   templateUrl: './main-settings.component.html',
   styleUrl: './main-settings.component.scss',
   imports: [
-    FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -64,15 +63,30 @@ export class MainSettingsStepComponent extends SettingsStep implements OnInit {
 
   sessionIDForCopying = '';
 
+  disabled = false;
+
   readonly form = this.formBuilder.nonNullable.group({
-    name: ['', Validators.required],
+    name: [{ value: '', disabled: false }, Validators.required],
     startDate: [new Date(), Validators.required],
     endDate: [new Date(), Validators.required],
     duration: [0],
   });
 
+  @Input('disabled') set disabledProp(disabled: boolean) {
+    this.disabled = disabled;
+
+    if (disabled) {
+      this.form.disable();
+    } else {
+      this.form.enable();
+    }
+  }
   @Input() completed = false;
-  @Output() completedChange = this.form.statusChanges.pipe(map(status => status === 'VALID'));
+
+  @Output() completedChange = this.form.statusChanges.pipe(
+    filter(status => status === 'VALID' || status === 'INVALID'),
+    map(status => status === 'VALID'),
+  );
 
   @Output() next = new EventEmitter();
 

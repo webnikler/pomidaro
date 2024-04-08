@@ -1,0 +1,19 @@
+<h2 matDialogTitle>{{ rowName }}</h2>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+  <p fxLayout="row" fxLayoutAlign="space-between center">
+    <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <span>{{ date | date: 'd MMMM' }}</span>
+      <mat-chip disabled>
+        <weekday [colType]="colType" [weekday]="weekday" />
+      </mat-chip>
+    </span>
+    <app-session-table-td [cell]="data.cell" />
+  </p>
+  <session-cell-input [type]="data.cell.trackingType" [value]="data.cell.value" (valueChange)="value = $event" />
+</mat-dialog-content>
+<mat-divider></mat-divider>
+<mat-dialog-content fxLayout="row" fxLayoutGap="8px">
+  <button fxFlex="50" color="accent" mat-raised-button [mat-dialog-close]="true" [disabled]="value === data.cell.value">ПРИМЕНИТЬ</button>
+  <button fxFlex="50" mat-button [mat-dialog-close]="true">ОТМЕНА</button>
+</mat-dialog-content>
